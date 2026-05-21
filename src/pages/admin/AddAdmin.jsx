@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { auth } from '../../config/firebase';
-import { API_URL } from '../../config/api';
+import { buildApiPath } from '../../config/api';
 
 const CredentialModal = ({ email, password, onClose }) => {
   const handleCopy = async () => {
@@ -64,7 +64,7 @@ const AddAdmin = () => {
     try {
       // Get Firebase ID token for auth
       const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
-      const res = await fetch(`${API_URL}/admin/create-admin`, {
+      const res = await fetch(buildApiPath('/admin/create-admin'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
