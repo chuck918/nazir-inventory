@@ -13,9 +13,45 @@ try {
       raw = raw.slice(1, -1);
     }
 
-    raw = raw.replace(/\\n/g, '\n');
+    const normalizeMultilineString = (json) => {
+      let inString = false;
+      let escaped = false;
+      let result = '';
 
-    const serviceAccount = JSON.parse(raw);
+      for (let i = 0; i < json.length; i += 1) {
+        const ch = json[i];
+
+        if (escaped) {
+          result += ch;
+          escaped = false;
+          continue;
+        }
+
+        if (ch === '\\') {
+          escaped = true;
+          result += ch;
+          continue;
+        }
+
+        if (ch === '"') {
+          inString = !inString;
+          result += ch;
+          continue;
+        }
+
+        if (inString && (ch === '\n' || ch === '\r')) {
+          result += '\\n';
+          continue;
+        }
+
+        result += ch;
+      }
+
+      return result;
+    };
+
+    const normalized = normalizeMultilineString(raw);
+    const serviceAccount = JSON.parse(normalized);
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
