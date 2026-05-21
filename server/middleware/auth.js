@@ -6,7 +6,16 @@ dotenv.config();
 // For now, we will gracefully handle its absence so the server can start
 try {
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    let raw = process.env.FIREBASE_SERVICE_ACCOUNT.trim();
+
+    if ((raw.startsWith("'") && raw.endsWith("'")) ||
+        (raw.startsWith('"') && raw.endsWith('"'))) {
+      raw = raw.slice(1, -1);
+    }
+
+    raw = raw.replace(/\\n/g, '\n');
+
+    const serviceAccount = JSON.parse(raw);
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
