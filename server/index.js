@@ -140,8 +140,16 @@ app.delete('/api/admin/items/:id', async (req, res) => {
     await db.delete(items).where(eq(items.id, req.params.id));
     res.json({ success: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to delete item' });
+    console.error('Delete item error:', error);
+
+    const message = String(error.message || error);
+    if (/foreign key|constraint/i.test(message)) {
+      return res.status(409).json({
+        error: 'Cannot delete item while requests reference it. Remove related requests first.'
+      });
+    }
+
+    res.status(500).json({ error: `Failed to delete item: ${message}` });
   }
 });
 
