@@ -4,10 +4,12 @@ import { Package, Search, Mail, Lock, LayoutDashboard, ClipboardList, LogOut, Mo
 import { auth } from '../config/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import toast from 'react-hot-toast';
+import { useInventory } from '../context/InventoryContext';
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isLoading } = useInventory();
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const inactivityTimer = useRef(null);
@@ -109,6 +111,24 @@ const DashboardLayout = () => {
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', width: '100vw', background: 'var(--bg-color)', gap: '16px' }}>
+        <div style={{ width: '48px', height: '48px', border: '4px solid rgba(0,0,0,0.1)', borderTopColor: 'var(--accent-color)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <h2 style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-primary)', margin: 0 }}>Loading...</h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Please wait while we fetch the inventory data</p>
+        <style>
+          {`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
+      </div>
+    );
+  }
 
   return (
     <div className="layout-container">

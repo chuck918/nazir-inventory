@@ -12,6 +12,7 @@ export const InventoryProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const [requests, setRequests] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Admin routes need the token
   const getAuthToken = async () => {
@@ -30,6 +31,7 @@ export const InventoryProvider = ({ children }) => {
   };
 
   const fetchItems = async () => {
+    setIsLoading(true);
     try {
       const res = await fetch(buildApiPath('/items'));
       const data = await res.json();
@@ -43,6 +45,8 @@ export const InventoryProvider = ({ children }) => {
     } catch (error) {
       console.error('Failed to fetch items:', error);
       setItems([]); // Fallback to empty array to prevent crashes
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -242,7 +246,8 @@ export const InventoryProvider = ({ children }) => {
         addRequest,
         updateRequestStatus,
         addMessage,
-        markMessageRead
+        markMessageRead,
+        isLoading
       }}
     >
       {children}
