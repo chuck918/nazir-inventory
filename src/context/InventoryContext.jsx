@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { auth } from '../config/firebase';
-import { API_URL } from '../config/api';
+import { buildApiPath } from '../config/api';
 
 const InventoryContext = createContext();
 
@@ -31,7 +31,7 @@ export const InventoryProvider = ({ children }) => {
 
   const fetchItems = async () => {
     try {
-      const res = await fetch(`${API_URL}/items`);
+      const res = await fetch(buildApiPath('/items'));
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to fetch items');
 
@@ -50,8 +50,8 @@ export const InventoryProvider = ({ children }) => {
     try {
       const headers = await getHeaders();
       const [reqsRes, msgsRes] = await Promise.all([
-        fetch(`${API_URL}/admin/requests`, { headers }),
-        fetch(`${API_URL}/admin/messages`, { headers })
+        fetch(buildApiPath('/admin/requests'), { headers }),
+        fetch(buildApiPath('/admin/messages'), { headers })
       ]);
       const reqsData = await reqsRes.json();
       const msgsData = await msgsRes.json();
@@ -86,7 +86,7 @@ export const InventoryProvider = ({ children }) => {
     try {
       const newItem = { ...itemData, id: uuidv4() };
       const headers = await getHeaders();
-      const res = await fetch(`${API_URL}/admin/items`, {
+      const res = await fetch(buildApiPath('/admin/items'), {
         method: 'POST',
         headers,
         body: JSON.stringify(newItem)
@@ -102,7 +102,7 @@ export const InventoryProvider = ({ children }) => {
   const updateItem = async (id, updatedData) => {
     try {
       const headers = await getHeaders();
-      const res = await fetch(`${API_URL}/admin/items/${id}`, {
+      const res = await fetch(buildApiPath(`/admin/items/${id}`), {
         method: 'PUT',
         headers,
         body: JSON.stringify(updatedData)
@@ -118,7 +118,7 @@ export const InventoryProvider = ({ children }) => {
   const deleteItem = async (id) => {
     try {
       const headers = await getHeaders();
-      const res = await fetch(`${API_URL}/admin/items/${id}`, {
+      const res = await fetch(buildApiPath(`/admin/items/${id}`), {
         method: 'DELETE',
         headers
       });
@@ -142,7 +142,7 @@ export const InventoryProvider = ({ children }) => {
         status: 'pending',
         date: new Date().toISOString()
       };
-      const res = await fetch(`${API_URL}/requests`, {
+      const res = await fetch(buildApiPath('/requests'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newRequest)
@@ -168,7 +168,7 @@ export const InventoryProvider = ({ children }) => {
       const timestampValue = new Date().toISOString();
       const headers = await getHeaders();
 
-      const res = await fetch(`${API_URL}/admin/requests/${id}`, {
+      const res = await fetch(buildApiPath(`/admin/requests/${id}`), {
         method: 'PUT',
         headers,
         body: JSON.stringify({ status, timestampKey, timestampValue, returnComment })
@@ -204,7 +204,7 @@ export const InventoryProvider = ({ children }) => {
   const addMessage = async (clientName, email, content) => {
     try {
       const newMessage = { id: uuidv4(), clientName, email, content, date: new Date().toISOString() };
-      const res = await fetch(`${API_URL}/messages`, {
+      const res = await fetch(buildApiPath('/messages'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newMessage)
@@ -219,7 +219,7 @@ export const InventoryProvider = ({ children }) => {
   const markMessageRead = async (id) => {
     try {
       const headers = await getHeaders();
-      const res = await fetch(`${API_URL}/admin/messages/${id}/read`, {
+      const res = await fetch(buildApiPath(`/admin/messages/${id}/read`), {
         method: 'PUT',
         headers
       });
