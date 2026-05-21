@@ -2,12 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { auth } from '../config/firebase';
+import { API_URL } from '../config/api';
 
 const InventoryContext = createContext();
 
 export const useInventory = () => useContext(InventoryContext);
-
-const API_URL = '/api';
 
 export const InventoryProvider = ({ children }) => {
   const [items, setItems] = useState([]);
