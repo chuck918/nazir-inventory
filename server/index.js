@@ -137,6 +137,10 @@ app.put('/api/admin/items/:id', async (req, res) => {
 // Delete item
 app.delete('/api/admin/items/:id', async (req, res) => {
   try {
+    // Delete related requests first to avoid foreign key constraint error
+    await db.delete(requests).where(eq(requests.itemId, req.params.id));
+    
+    // Then delete the item
     await db.delete(items).where(eq(items.id, req.params.id));
     res.json({ success: true });
   } catch (error) {
