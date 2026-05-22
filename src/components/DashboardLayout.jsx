@@ -145,9 +145,9 @@ const DashboardLayout = () => {
         <div className="flex items-center justify-between" style={{ padding: '24px', borderBottom: '1px solid rgba(0,0,0,0.05)', marginBottom: '24px' }}>
           <div className="flex items-center" style={{ gap: '12px' }}>
             <div style={{ background: 'white', padding: '8px', borderRadius: '50%', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Activity size={24} color="var(--accent-color)" />
+              <img src="/naz.svg" alt="Nazir" style={{ width: '24px', height: '24px' }} />
             </div>
-            <h2 style={{ fontSize: '1.2rem', margin: 0, fontWeight: '700' }}>Nazir.</h2>
+            {/* <h2 style={{ fontSize: '1.2rem', margin: 0, fontWeight: '700' }}>Nazir.</h2> */}
           </div>
           <button className="hamburger-btn" onClick={closeSidebar} style={{ padding: 0 }}>
             <X size={24} />
@@ -197,7 +197,11 @@ const DashboardLayout = () => {
         {/* Footer Area */}
         <div style={{ padding: '24px', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>@2026 Nazir</span>
+            {/* <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <img src="/naz.svg" alt="Nazir" style={{ width: '24px', height: '24px' }} />
+              <span style={{ fontWeight: '600' }}>Nazir.</span>
+            </div> */}
+            <span>© 2026 Nazir. All rights reserved.</span>
           </div>
         </div>
       </aside>
